@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.biz.oracle.mapper.IolistDao">
+ 	<!-- 
+ 	DTO(VO)를 생성하지 않고 mapper에서 result값을 담을 Map(java 자료형)을 선언하여 DTO를 대체하고
+ 	SELECT된 결과를 Map에 담아 List로 얻어오기 위한 Code이다
+ 	
+ 	column=""값은 SELECT의 projection column명
+ 	property=""는 변수명과 같은 역할을 하며 맵의 key로서 값을 getter할 때 사용되는 이름
+ 	property는 문자열 형태이기 때문에 모두 소문자나 대문자를 사용하며 _를 넣어서 명명하는 패턴을 사용한다
+ 	-->
+ 	<resultMap type="Map" id="selectMapList">
+	 	<result column="IO_SEQ" property="IO_SEQ" />
+		<result column="IO_DATE" property="IO_DATE" />
+		<result column="IO_INOUT" property="IO_INOUT" />
+		<result column="IO_QTY" property="IO_QTY" />
+		<result column="IO_PRICE" property="IO_PRICE" />
+		<result column="IO_TOTAL" property="IO_TOTAL" />
+		<result column="IO_PCODE" property="IO_PCODE" />
+		<result column="IO_DCODE" property="IO_DCODE" />
+ 	</resultMap>
+ 	
+ 	 <!-- SELECT한 해당 값들은 property를 column의 alias로 참조하여 map의 key를 찾아 object로 들어간다 -->
+ 	<select id="selectAll" resultMap="selectMapList">
+		 	SELECT IO_SEQ,
+					IO_DATE,
+					IO_INOUT,
+					IO_QTY,
+					IO_PRICE,
+					IO_TOTAL,
+					IO_PCODE,
+					IO_DCODE
+			FROM tbl_iolist
+ 	</select>
+ 	
+ 	<select id="findById"></select>
+ 	<insert id="insert"></insert>
+ 	<update id="update"></update>
+ 	<delete id="delete"></delete>
+ 
+ </mapper> 
