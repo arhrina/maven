@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.biz.sec.mapper.MDDao"> <!-- mapper namespace에 DAO 클래스 위치지정 -->
+	<!-- Mapper에서 만드는 DTO. DTO를 가져오기 힘들던 시절 3버전 이하에서 쓰던 방식 -->
+	<!-- column은 map의 value가 되고 property는 key가 된다 -->
+	<resultMap type="mdVO" id="masterDetail">
+		<id column="m_seq" property="m_seq"/><!-- id는 primary key로 지정된 컬럼만 -->
+		<result column="m_subject" property="m_subject"/>
+		<collection property="deList" column="m_seq" ofType="DetailDTO"
+		 select="detail"><!-- detail에서 데이터를 읽어오는데 m_seq를 전달인자로 보내서 결과를 deList에 채워서 가져온다 -->
+		</collection>
+	</resultMap>
+
+	<select id="selectAll" resultMap="masterDetail"> <!-- id에 dao에 있는 메소드들 이름 -->
+		<!-- 내용에, 들어갈 SQL Query문 -->
+		SELECT * FROM tbl_master
+	</select>
+	
+	<select id="detail" resultType="DetailDTO">
+	SELECT d_seq, d_m_seq, d_subject, d_ok FROM tbl_detail
+	WHERE d_m_seq = #{d_seq}
+	</select>
+	<select id="findById">
+	</select>
+
+	<insert id="insertMaster" parameterType="masterDTO">
+	<!-- insert order 타이밍에 SELECT문에 있는 결과를 keyProperty 변수명(parameterType에
+	있는 변수에 담고 그걸 INSERT에 #{m_seq} 날려라
+	반드시 한개의 컬럼만이 나와야한다 -->
+		<selectKey keyProperty="m_seq" order="BEFORE" resultType="Long">
+			SELECT SEQ_MASTER.NEXTVAL AS m_seq FROM DUAL
+		</selectKey>
+	INSERT INTO tbl_master(
+		M_SEQ,
+		M_SUBJECT
+	)
+	VALUES(
+		#{m_seq},
+		#{m_subject}
+	)
+	
+	</insert>
+
+	<update id="update">
+	</update>
+
+	<delete id="delete">
+	</delete>
+</mapper>
